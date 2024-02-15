@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Danh sách sản phẩm laptop theo tìm kiếm</title>
+    <script>
+        function moCuaSoNho() {
+            window.open('/register', 'sign', 'width=400,height=400');
+        }
+    </script>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .product-card {
+            border: 1px solid #e1e1e1;
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        .login-register-buttons {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
+        .product-image {
+            max-width: 100%;
+            height: auto;
+        }
+        .login-register-buttons a {
+            margin-right: 10px; /* Khoảng cách giữa 2 liên kết */
+        }
+        .login-register-buttons {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
+        .login-register-buttons a {
+            margin-right: 10px; /* Khoảng cách giữa 2 liên kết */
+        }
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .home-link {
+            margin-right: auto;
+            padding: 5px 10px; /* Điều chỉnh kích thước của khung viền */
+            border: 1px solid #000000; /* Màu và độ dày của khung viền */
+        }
+    </style>
+</head>
+<body>
+
+<!--<div class="container">-->
+<!--    <div class="login-register-buttons">-->
+<!--        <a href="/login">Đăng nhập</a>-->
+<!--        <a href="/register" >Đăng ký</a>-->
+<!--    </div>-->
+<div class="container">
+    <div class="navigation">
+        <a href="/home1" class="home-link">Trang chủ</a>
+        <div class="login-register-buttons">
+            <a href="/login">Đăng nhập</a>
+            <a href="/register">Đăng ký</a>
+        </div>
+    </div>
+    <!-- Các phần còn lại của trang -->
+</div>
+
+    <div class="container">
+        <h1>Danh sách sản phẩm laptop</h1>
+        <form th:action="@{/product/search}" method="get">
+            <div class="form-row">
+                <div class="form-group col-md-3">
+                    <select class="form-control" name="ram">
+                        <option value="">Chọn RAM</option>
+                        <option value="4">4GB</option>
+                        <option value="8">8GB</option>
+                        <option value="16">16GB</option>
+                        <option value="32">32GB</option>
+                        <option value="64">64GB</option>
+                    </select>
+                </div>
+                <div class="form-group col-md-3">
+                    <select class="form-control" name="ssd">
+                        <option value="">Chọn SSD</option>
+                        <option value="256">256GB</option>
+                        <option value="512">512GB</option>
+                        <option value="1">1TB</option>
+                    </select>
+                </div>
+                <div class="form-group col-md-3">
+                    <select class="form-control" name="priceRange">
+                        <option value="">Chọn khoảng giá</option>
+                        <option value="5-10">5-10 triệu đồng</option>
+                        <option value="10-20">10-20 triệu đồng</option>
+                        <option value="20">Trên 20 triệu đồng</option>
+                    </select>
+                </div>
+                <div class="form-group col-md-3">
+                    <button type="submit" class="btn btn-primary">Tìm kiếm</button>
+                </div>
+            </div>
+        </form>
+        <div th:if="${param.ram}">
+            <p>Bạn đã chọn RAM: <span th:text="${param.ram}"></span>GB</p>
+        </div>
+        <div th:if="${param.ssd}">
+                <p>Bạn đã chọn SSD: <span th:text="${param.ssd}"></span>GB</p>
+        </div>
+        <div th:if="${param.priceRange}">
+            <p>Bạn đã chọn giá: <span th:text="${param.priceRange}"></span>Đồng</p>
+        </div>
+        <div class="row" th:if="${#lists.isEmpty(searchProduct)}">
+            <div class="col-md-12">
+                <p>Không tìm thấy sản phẩm.</p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4" th:each="laptop : ${searchProduct}">
+                <div class="product-card">
+                    <img class="product-image"  th:src="${laptop.image}" th:alt="${laptop.name}">
+                    <h3 th:text="${laptop.name}"></h3>
+                    <p th:text="'RAM: ' + ${laptop.ram}"+GB></p>
+                    <p th:text="'Chip: ' + ${laptop.chip}"></p>
+                    <p th:if="${laptop.ssd == 1}" th:text="'SSD: 1TB'"></p>
+                    <p th:if="${laptop.ssd == 512}" th:text="'SSD: 512GB'"></p>
+                    <p th:if="${laptop.ssd == 256}" th:text="'SSD: 256GB'"></p>
+                    <p th:text="'VGA: ' + ${laptop.vga}"></p>
+                    <p th:text="'Màn hình: ' + ${laptop.monitor}"></p>
+                    <p th:text="'Giá: ' + ${laptop.price} + ' VND'"></p>
+                    <form th:action="@{/shopping-cart/add/{id}(id=${laptop.id})}" method="get">
+                        <button type="submit" class="btn btn-success">BUY</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@1.16.1/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+</body>
+</html>
+
+

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Giỏ hàng</title>
+    <link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            padding: 20px;
+        }
+        h2 {
+            color: #333;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        .delete-button {
+            color: #000; /* Màu chữ đen */
+            background-color: #ffffff; /* Nền trắng */
+            border: 1px solid #000; /* Viền đen */
+            padding: 5px 10px; /* Điều chỉnh kích thước */
+            text-decoration: none; /* Loại bỏ gạch chân */
+            transition: background-color 0.3s, color 0.3s; /* Hiệu ứng chuyển đổi màu khi hover */
+        }
+        .delete-button:hover {
+            color: #fff; /* Màu chữ trắng khi hover */
+            background-color: #000; /* Nền đen khi hover */
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2>Giỏ hàng</h2>
+    <hr>
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Tên sản phẩm</th>
+            <th>Giá</th>
+            <th>Số lượng</th>
+            <th>Thành tiền</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <tr>
+            <td colspan="3"><tr th:each="product : ${carts}">
+            <td th:text="${product.name}">Tên sản phẩm</td>
+            <td th:text="${product.price}">Giá</td>
+            <td th:text="${product.quantity}">Số lượng</td>
+            <td th:text="${product.price * product.quantity}">Thành tiền</td>
+            <td>
+                <a th:href="@{/shopping-cart/removeFromCart(cartId=${product.productId})}" class="btn-sm delete-button" onclick="return confirm('Bạn có chắc chắn muốn xóa sản phẩm này không?')">
+                    Xóa
+                </a>
+            </td>
+        </tbody>
+    </table>
+    <div class="container" th:if="${totalPrice > 0}">
+        <p><strong>Tổng thành tiền: <span th:text="${#numbers.formatDecimal(totalPrice, 0, 'COMMA', 2, 'POINT')}"></span></strong></p>
+        <button type="submit" class="btn btn-success">Thanh toán </button>
+    </div>
+</div>
+
+<div>
+    <hr>
+    <a th:href="@{/product/list}">Back to Product List</a>
+</div>
+
+
+</body>
+
+</html>
